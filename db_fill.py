@@ -1,7 +1,9 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import argparse, logging, os, sys, time, codecs
+import logging, time
+import argparse,  sys
+import codecs
 sys.stderr = codecs.getwriter( 'utf8' )( sys.stderr )
 sys.stdout = codecs.getwriter( 'utf8' )( sys.stdout )
 
@@ -28,14 +30,18 @@ if __name__ == '__main__':
     # parse arguments
     args = parser.parse_args()
     # init logging
-    logging.basicConfig( format=u"\t%(levelname)s:[%(asctime)s]>>> %(message)s",
-                         filename=args.log_file, level=logging.INFO)
+    logger = logging.getLogger('Main')
+    handler = logging.FileHandler(args.log_file)
+    formatter = logging.Formatter('%(levelname)s@%(name)s:[%(asctime)s]>>> %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
     # greeting
-    logging.info( "Hello.\nArguments: {}.".format(args) )
+    logger.info( "Hello.\nArguments: {}.".format(args) )
     # processing of each XML file
     for file in args.xml_files:
         #log start
-        logging.info( "Start ingesting {}.".format( file ) )
+        logger.info( "Start ingesting {}.".format( file ) )
         '''
         batch_gen = Xml_File(file, BATCH_SIZE).get_batch()
         sub_dict = {}
@@ -68,12 +74,12 @@ if __name__ == '__main__':
         s = Subs.insert(sub_list)
         logging.info( "Submitters= {}. Rate={}".format( s, (s/(time.time() - t) ) ) )
         '''
-        logging.info( "Ingested {}.".format( file ) )
+        logger.info( "Ingested {}.".format( file ) )
     # processing of each CSV file
     for file in args.csv_files:
-        logging.info( "Start ingest {}.".format( file ) )
+        logger.info( "Start ingest {}.".format( file ) )
         pass # ingest csv file
-        logging.info( "Ingested {}.".format( file ) )
+        logger.info( "Ingested {}.".format( file ) )
     # farewell
-    logging.info( "Bye bye.\n\n" )
+    logger.info( "Bye bye.\n\n" )
 
