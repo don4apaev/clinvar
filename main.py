@@ -49,6 +49,7 @@ if __name__ == '__main__':
     for file in args.xml_files:
         #log start
         logger.info( "Start ingesting XML file {}.".format( file ) )
+        t = time.time()
         '''
         batch_gen = Xml_File(file, BATCH_SIZE).get_batch()
         sub_dict = {}

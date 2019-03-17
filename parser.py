@@ -53,7 +53,7 @@ class Parsing_File:
                                                                     len(list_of_tuples) ) )
                     raise
                 # yield batch
-                if len(list_of_insts) % self.batch_size == 0 :
+                if len(list_of_tuples) % self.batch_size == 0 :
                     yield list_of_tuples
                     del list_of_tuples[:]
 
@@ -97,8 +97,8 @@ class XML_File( Parsing_File ):
         # take referense values
         nodes = root.xpath("/ClinVarSet/ReferenceClinVarAssertion")
         if len(nodes) != 1:
-            self.logger.error( '{} ReferenceClinVarAssertion elements'.format( len(nodes) )
-                raise( BaseException("Unnormal ReferenceClinVarAssertion element") )
+            self.logger.error( '{} ReferenceClinVarAssertion elements'.format( len(nodes) ) )
+            raise( BaseException("Unnormal ReferenceClinVarAssertion element") )
         ref_list = []
         for n in nodes:
             for path in self.nodes_path:
