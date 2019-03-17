@@ -97,4 +97,4 @@ INDEX_VAR = (   'INDEX index1 ON {}.{} (#AlleleID) USING BTREE',
                 'INDEX p_idx ON {}.{} (Start, Stop) USING BTREE', 
                 'INDEX Cs0_idx ON {}.{} (ClinSigSimple) USING BTREE' )
 
-
+BATCH_SIZE = 1000

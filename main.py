@@ -15,11 +15,17 @@ if __name__ == '__main__':
                                      " database")
     # arguments description
     parser.add_argument("--xml-files", "-x", help="Path to xml files to import space separated",
-                        default=[XML_FILE], required=False, nargs='+')
+                        default=[XML_FILE], required=False, nargs='+'
+                        )
     parser.add_argument("--csv-files", "-c", help="Path to CSV files to import space separated",
-                        default=[CSV_FILE], required=False, nargs='+')
+                        default=[CSV_FILE], required=False, nargs='+'
+                        )
     parser.add_argument("--log-file", "-l", help="Path to log file",
-                        default="{}_clinvar.log".format( time.strftime("%d_%m_%Y") ) )
+                        default="{}_clinvar.log".format( time.strftime("%d_%m_%Y") ) 
+                        )
+    parser.add_argument("--batch-size", "-b", type=int, help="Set batch parse size",
+                        default=str(BATCH_SIZE)
+                        )
     #parser.add_argument("--dbms", help="DBMS type to import into", default="MySQL")
     #parser.add_argument("--database", help="Database/Namespace", default="clinvar")
     #parser.add_argument("--host", help="DBMS host", default="localhost")
@@ -35,13 +41,13 @@ if __name__ == '__main__':
     formatter = logging.Formatter('%(levelname)s@%(name)s:[%(asctime)s]>>> %(message)s')
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.DEBUG)
     # greeting
     logger.info( "Hello.\nArguments: {}.".format(args) )
     # processing of each XML file
     for file in args.xml_files:
         #log start
-        logger.info( "Start ingesting {}.".format( file ) )
+        logger.info( "Start ingesting XML file {}.".format( file ) )
         '''
         batch_gen = Xml_File(file, BATCH_SIZE).get_batch()
         sub_dict = {}
@@ -77,8 +83,16 @@ if __name__ == '__main__':
         logger.info( "Ingested {}.".format( file ) )
     # processing of each CSV file
     for file in args.csv_files:
-        logger.info( "Start ingest {}.".format( file ) )
-        pass # ingest csv file
+        logger.info( "Start ingest CSV file {}.".format( file ) )
+        batch_gen = CSV_File(file, args.batch_size).get_batch()
+        t = tb = time.time() # rate time, batch rate time
+        for batch_list in batch_gen:
+            s += len(batch_list)
+            logger.debug( batch_list[0] )
+            logger.info( 'Submissions = {}; Batch Rate = {};  General rate = {}.'.
+                    format( s, ( args.batch_size/(time.time() - tb) ), ( s/(time.time() - t) ) )
+                    )
+            tb = time.time()
         logger.info( "Ingested {}.".format( file ) )
     # farewell
     logger.info( "Bye bye.\n\n" )
