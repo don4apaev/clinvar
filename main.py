@@ -81,7 +81,7 @@ if __name__ == '__main__':
         s = Subs.insert(sub_list)
         logging.info( "Submitters= {}. Rate={}".format( s, (s/(time.time() - t) ) ) )
         '''
-        logger.info( "Ingested {}.".format( file ) )
+        logger.info( "Ingested {} in {}.".format( file, time.time() - t ) )
     # processing of each CSV file
     for file in args.csv_files:
         logger.info( "Start ingest CSV file {}.".format( file ) )
@@ -97,7 +97,7 @@ if __name__ == '__main__':
             tb = time.time()
             #if s > 3000:
             #    break
-        logger.info( "Ingested {}.".format( file ) )
+        logger.info( "Ingested {} in {}.".format( file, time.time() - t ) )
     # farewell
     logger.info( "Bye bye.\n\n" )
 
