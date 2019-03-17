@@ -8,6 +8,7 @@ sys.stderr = codecs.getwriter( 'utf8' )( sys.stderr )
 sys.stdout = codecs.getwriter( 'utf8' )( sys.stdout )
 
 from defines import *
+from parser import *
 
 if __name__ == '__main__':
     # init parser
@@ -85,6 +86,7 @@ if __name__ == '__main__':
     for file in args.csv_files:
         logger.info( "Start ingest CSV file {}.".format( file ) )
         batch_gen = CSV_File(file, args.batch_size).get_batch()
+        s = 0
         t = tb = time.time() # rate time, batch rate time
         for batch_list in batch_gen:
             s += len(batch_list)
@@ -93,6 +95,8 @@ if __name__ == '__main__':
                     format( s, ( args.batch_size/(time.time() - tb) ), ( s/(time.time() - t) ) )
                     )
             tb = time.time()
+            #if s > 3000:
+            #    break
         logger.info( "Ingested {}.".format( file ) )
     # farewell
     logger.info( "Bye bye.\n\n" )
