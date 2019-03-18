@@ -62,11 +62,12 @@ class Parsing_File:
 # XML parser
 class XML_File( Parsing_File ):
 
-    def __init__( self, file_name, ref_paths, asr_paths ) :
+    def __init__( self, file_name, ref_paths, asr_paths, tables ) :
         Parsing_File.__init__( self, file_name )
         # Additional variable
         self.ref_paths = ref_paths # ReferenceClinVarAssertion paths
         self.asr_paths = asr_paths # ClinVarAssertion paths
+        self.tables    = tables
 
     def _get_block( self ) :
         content = None
@@ -143,10 +144,25 @@ class XML_File( Parsing_File ):
                     if len( subn ) > 1 :
                         self.logger.error( '{} ClinVarAssertion nodes'.format( len( subn ) ) )
                         raise( BaseException( "Multiple ClinVarAssertion nodes" ) )
-                    elif len( subn) :
+                    elif len( subn ) :
                         int_list += [ subn[ 0 ].text ]
             asr_list += [ int_list ]
-        
+        # Form return list
+        return_list = [ ]           # list of tables tuples lists
+        for l in ars_list :         # for every assertion in block
+            tuple_list = [ ]        # list of tables tuples
+            for t in tables :       # for every table in argument
+                table_list = [ ]    # list of table elements
+                for e in t:         # for every element in table
+                    if not e[ 0 ] :
+                        table_list += [ ref_list[ e[ 1 ] ] ]
+                    else :
+                        table_list += [ l[ e[ 1 ] ] ]
+                tuple_list += [ tuple( table_list ) ] 
+            return_list += tuple_list
+            del tuple_list[ : ]
+        return return_list
+
 
 
 #CSV parser

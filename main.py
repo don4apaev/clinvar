@@ -50,25 +50,28 @@ if __name__ == '__main__' :
     for file in args.xml_files :
         logger.info( "Start ingesting XML file {}.".format( file ) )
         # Init and get batch generator
-        batch_gen = XML_File( file, REFERENCE_PATHS, ASSERTION_PATHS ).get_batch( args.batch_size )
+        batch_gen = (XML_File( file, REFERENCE_PATHS, ASSERTION_PATHS, TABLES_L ).
+                        get_batch( args.batch_size ) )
         # Significance insertion, submitter accumulation
         sub_dict = { } # unique sumitter dict
         ic = 0 # insert counter
         t = tb = time.time( ) # rate time, batch rate time
         for batch_list in batch_gen:
-            # Dict accumulation
-            for d in batch_list[ 1 ]:
-                if d[ 0 ] not in sub_dict:
-                    sub_dict.update( { d[ 0 ]:d[ 1 ] } )
-                elif sub_dict[ d[ 0 ] ] != d[ 1 ] :
-                    if sub_dict[ d[ 0 ] ] is None :
-                        sub_dict[ d[ 0 ] ] = d[ 1 ]
-                    elif d[ d [ 0 ] ] :
+            # Dict and list accumulation
+            insert_list = []
+            for d in batch_list:
+                if d[ 0 ][ 0 ] not in sub_dict:
+                    sub_dict.update( { d[ 0 ][ 0 ]:d[ 0 ][ 1 ] } )
+                elif sub_dict[ d[ 0 ][ 0 ] ] != d[ 0 ][ 1 ] :
+                    if sub_dict[ d[ 0 ][ 0 ] ] is None :
+                        sub_dict[ d[ 0 ][ 0 ] ] = d[ 0 ][ 1 ]
+                    elif d[ d [ 0 ][ 0 ] ] :
                         logger.debug( 'Name {} for {} known as {}.'.
                                         format( d[ 1 ], d[ 0 ], sub_dict[ d[ 0 ] ] )
                                     )
+                insert_list += [ d [ 1 ] ]
             # Data base insertion
-            ic += len( batch_list[ 0 ] ) # insert( batch_list[ 0 ] )
+            ic += len( insert_list ) # insert( batch_list[ 0 ] )
             logger.debug( batch_list[ 0 ][ 0 ] )
             logger.info( 'Significance = {}; Batch Rate = {};  General rate = {}.'.
                             format( ic, len( batch_list[ 0 ] ) / ( time.time( ) - tb ), 

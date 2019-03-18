@@ -6,11 +6,11 @@ TABLE_SUB       = "CV_Submitters_T"
 TABLE_SET       = "ClinVar2Sub_Sig_T"
 TABLE_VAR       = "variant_summary_T"
 
-COLUMN_SUB      = ( "SubmitterName",
-                    "SubmitterID"
+COLUMN_SUB      = ( "SubmitterID",
+                    "SubmitterName"
                     )
-TYPE_SUB        = ( 'text',
-                    'INT'
+TYPE_SUB        = ( 'INT',
+                    'text'
                     )
 COLUMN_SET      = ( "SubmitterID",
                     "RCVaccession",
@@ -105,4 +105,8 @@ ASSERTION_PATHS = ( ( 'ClinVarAccession', 'OrgID' ), # SubmitterID
                     ( 'ClinVarSubmissionID', 'submitter' ) # SubmitterName
                     'ClinicalSignificance/Description' # ClinicalSignificance
                     )
+
+TABLES_L        = [ ( ( 1, 0 ), ( 1, 1 ) ),
+                    ( ( 1, 0 ), ( 0, 0 ), ( 1, 2) )
+                    ]
 
