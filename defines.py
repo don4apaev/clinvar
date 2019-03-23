@@ -102,7 +102,7 @@ BATCH_SIZE      = 1000
 REFERENCE_PATHS = ( ( 'ClinVarAccession', 'Acc' ), # RCVaccession
                     )
 ASSERTION_PATHS = ( ( 'ClinVarAccession', 'OrgID' ), # SubmitterID
-                    ( 'ClinVarSubmissionID', 'submitter' ) # SubmitterName
+                    ( 'ClinVarSubmissionID', 'submitter' ), # SubmitterName
                     'ClinicalSignificance/Description' # ClinicalSignificance
                     )
 

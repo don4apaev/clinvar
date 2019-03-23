@@ -54,9 +54,9 @@ class Parsing_File:
                                     )
                     raise
                 # Yield batch
-                if len( list_of_tuples ) % self.batch_size == 0 :
+                if len( list_of_tuples ) >= self.batch_size :
                     yield list_of_tuples
-                    #del list_of_tuples[:]
+                    del list_of_tuples[:]
 
 
 # XML parser
@@ -149,9 +149,9 @@ class XML_File( Parsing_File ):
             asr_list += [ int_list ]
         # Form return list
         return_list = [ ]           # list of tables tuples lists
-        for l in ars_list :         # for every assertion in block
+        for l in asr_list :         # for every assertion in block
             tuple_list = [ ]        # list of tables tuples
-            for t in tables :       # for every table in argument
+            for t in self.tables :       # for every table in argument
                 table_list = [ ]    # list of table elements
                 for e in t:         # for every element in table
                     if not e[ 0 ] :
@@ -159,8 +159,8 @@ class XML_File( Parsing_File ):
                     else :
                         table_list += [ l[ e[ 1 ] ] ]
                 tuple_list += [ tuple( table_list ) ] 
-            return_list += tuple_list
-            del tuple_list[ : ]
+            return_list += [ tuple_list ]
+            #del tuple_list[ : ]
         return return_list
 
 

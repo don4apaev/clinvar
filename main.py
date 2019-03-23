@@ -10,7 +10,7 @@ import codecs
 from defines import *
 from parser import *
 
-if __name__ == '__main__' :
+def main():
     # Init parser
     parser = argparse.ArgumentParser( description = "Import XML or/and CSV ClinVar "\
                                      "files into clinvar database" )
@@ -38,7 +38,7 @@ if __name__ == '__main__' :
     args = parser.parse_args( )
     # Init logging
     g_logger = logging.getLogger( 'clinvar' )
-    g_handler = logging.FileHandler( args.log_file )
+    g_handler = logging.FileHandler( args.log_file, mode='w', encoding='utf8' )
     g_formatter = logging.Formatter( '%(levelname)s@%(name)s:[%(asctime)s]>>> %(message)s' )
     g_handler.setFormatter( g_formatter )
     g_logger.addHandler( g_handler )
@@ -72,29 +72,36 @@ if __name__ == '__main__' :
                 insert_list += [ d [ 1 ] ]
             # Data base insertion
             ic += len( insert_list ) # insert( batch_list[ 0 ] )
-            logger.debug( batch_list[ 0 ][ 0 ] )
+            logger.debug( '{}; {}'.format( insert_list[ 0 ], len(insert_list) ) )
             logger.info( 'Significance = {}; Batch Rate = {};  General rate = {}.'.
-                            format( ic, len( batch_list[ 0 ] ) / ( time.time( ) - tb ), 
+                            format( ic, len( insert_list ) / ( time.time( ) - tb ), 
                                     ic / ( time.time( ) - t ) )
                         )
             tb = time.time( )
-            #if ic > 3000:
-            #    break
+            if ic > 3000:
+                break
         # Submitter insertion
         sub_list = [ ] # unique submitter list
         ic = 0 # insert counter
         t = tb = time.time( ) # rate time, batch rate time
         for sid in sub_dict :
             sub_list += [ ( sid, sub_dict[ sid ] ) ]
-            if len( sub_list ) == args.batch_size :
+            if len( sub_list ) >= args.batch_size :
                 # Data base insertion
                 ic += len( sub_list ) # insert( sub_list )
                 logger.debug( sub_list[ 0 ] )
-                logging.info( 'Submitters = {}; Batch Rate = {};  General rate = {}.'.
-                                format( ic, len( sub_list ) / ( time.time( ) - tb ), 
-                                    ic / ( time.time( ) - t ) ) )
+                logger.info( 'Submitters = {}; Batch Rate = {};  General rate = {}.'.
+                            format( ic, len( sub_list ) / ( time.time( ) - tb ),
+                                    ic / ( time.time( ) - t ) )
+                        )
                 del sub_list[ : ]
                 tb = time.time( )
+        ic += len( sub_list ) # insert( sub_list )
+        logger.debug( sub_list[ 0 ] )
+        logger.info( 'Submitters = {}; Batch Rate = {};  General rate = {}.'.
+                            format( ic, len( sub_list ) / ( time.time( ) - tb ),
+                                    ic / ( time.time( ) - t ) )
+                        )
         logger.info( "Ingested {} in {}.".format( file, time.time( ) - t ) )
     # Processing of each CSV file
     for file in args.csv_files :
@@ -113,9 +120,12 @@ if __name__ == '__main__' :
                                     ic / ( time.time( ) - t ) )
                         )
             tb = time.time( )
-            #if ic > 3000:
-            #    break
+            if ic > 3000:
+                break
         logger.info( "Ingested {} in {}.".format( file, time.time( ) - t ) )
     # Farewell
     logger.info( "Bye bye.\n\n" )
 
+
+if __name__ == '__main__' :
+    main()
