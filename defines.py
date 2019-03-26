@@ -1,6 +1,9 @@
 CSV_FILE        = "/data/store/szubarev/Downloads/variant_summary.txt.gz"
 XML_FILE        = "/data/store/szubarev/Downloads/ClinVarFullRelease_00-latest.xml.gz"
 
+PORT            = 3306
+USER            = "hgmd"
+PASSWORD        = "hgmd"
 DATABASE        = "clinvar"
 TABLE_SUB       = "CV_Submitters_T"
 TABLE_SET       = "ClinVar2Sub_Sig_T"
@@ -88,14 +91,14 @@ TYPE_VAR        = ( 'int(11) DEFAULT NULL',
                     'int(11) DEFAULT NULL',
                     'int(11) DEFAULT NULL'
                     )
-
-INDEX_SUB       = ( "UNIQUE INDEX Index0 ON {}.{} (SubmitterID)", ) # .format(DATABASE, TABLE_VAR)
-INDEX_SET       = ( "UNIQUE INDEX Index0 ON {}.{} (RCVaccession, SubmitterID)",
-                    "INDEX Index1 ON {}.{} (SubmitterID, RCVaccession)" )
-INDEX_VAR       = ( 'INDEX index1 ON {}.{} (#AlleleID) USING BTREE', 
-                    'INDEX c_idx ON {}.{} (Chromosome) USING BTREE', 
-                    'INDEX p_idx ON {}.{} (Start, Stop) USING BTREE', 
-                    'INDEX Cs0_idx ON {}.{} (ClinSigSimple) USING BTREE' )
+# name, columns, unique, btree
+INDEX_SUB       = ( ( "Index0", ( "SubmitterID", ), True, False ), )
+INDEX_SET       = ( ( "Index0", ("RCVaccession", "SubmitterID" ), True, False ),
+                    ( "Index1", ( "SubmitterID", "RCVaccession") False, False ) )
+INDEX_VAR       = ( ( 'index1', ( '#AlleleID', ), False, True ), 
+                    ( 'c_idx', ( 'Chromosome', ), False, True ), 
+                    ( 'p_idx', ('Start', 'Stop'), False, True ),
+                    ( 'Cs0_idx', ('ClinSigSimple', ), False, True ) )
 
 BATCH_SIZE      = 1000
 

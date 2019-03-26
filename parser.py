@@ -4,16 +4,16 @@ from lxml import etree
 
 class Parsing_File:
 
-    def __init__( self, file_name ):
+    def __init__( self, file_name ) :
         # Set variables
         self.file_name = file_name
         # Init logger
-        self.logger = logging.getLogger('clinvar.Parser')
+        self.logger = logging.getLogger( 'clinvar.Parser' )
 
-    def _file_init( self ):
+    def _file_init( self ) :
         pass
 
-    def _get_block( self ):
+    def _get_block( self ) :
         content = None
         # Get line
         line = self.file.readline( )
@@ -23,17 +23,17 @@ class Parsing_File:
             print >> content, line
         return content
 
-    def _process_block( self, content ):
+    def _process_block( self, content ) :
         # Split by spaces
         return [tuple( content.rstrip().split() )]
 
-    def get_batch( self, batch_size ):
+    def get_batch( self, batch_size ) :
         self.batch_size = batch_size
         self.file = None
         # Unzip and open file
-        with gzip.open(self.file_name,"rb") as self.file:
+        with gzip.open( self.file_name, "rb" ) as self.file :
             # Preparse init
-            self._file_init()
+            self._file_init( )
             list_of_tuples = [ ]
             # Start of file parse
             while True:
@@ -92,7 +92,7 @@ class XML_File( Parsing_File ):
         # Return block
         return content
 
-    def _process_block( self, content ): 
+    def _process_block( self, content ) : 
         # Init XML parser
         parser = etree.XMLParser(remove_comments = True)
         root = etree.fromstring(content,parser)

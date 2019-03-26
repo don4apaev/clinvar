@@ -8,7 +8,8 @@ import codecs
 #sys.stdout = codecs.getwriter( 'utf8' )( sys.stdout )
 
 from defines import *
-from parser import *
+from parser import  XML_File, CSV_File
+from cannect import Connection
 
 def main():
     # Init parser
@@ -16,24 +17,25 @@ def main():
                                      "files into clinvar database" )
     # Arguments description
     parser.add_argument( "--xml-files", "-x", help = "Path to xml files to import space separated",
-                        default = [ XML_FILE ], required = False, nargs = '+'
-                        )
-    parser.add_argument( "--csv-files", "-c", help="Path to CSV files to import space separated",
-                        default = [ CSV_FILE ], required=False, nargs='+'
-                        )
-    parser.add_argument( "--log-file", "-l", help="Path to log file",
-                        default="{}_clinvar.log".format( time.strftime("%d_%m_%Y") ) 
-                        )
-    parser.add_argument( "--batch-size", "-b", type=int, help="Set batch parse size",
-                        default=str( BATCH_SIZE )
-                        )
-    #parser.add_argument("--dbms", help="DBMS type to import into", default="MySQL")
-    #parser.add_argument("--database", help="Database/Namespace", default="clinvar")
-    #parser.add_argument("--host", help="DBMS host", default="localhost")
-    #parser.add_argument("--port", help="DBMS port, defualt depends on DBMS type")
-    #parser.add_argument("--user", "-u", help="DBMS user, defualt depends on DBMS type")
-    #parser.add_argument("--password", "-p", help="DBMS password, defualt depends on DBMS type")
-    #parser.add_argument("--options", "-o", help="Options to pass to database driver", nargs='*')
+                        default = [ XML_FILE ] )
+    parser.add_argument( "--csv-files", "-c", help = "Path to CSV files to import space separated",
+                        default = [ CSV_FILE ] )
+    parser.add_argument( "--log-file", "-l", help = "Path to log file",
+                        default = "{}_clinvar.log".format( time.strftime("%d_%m_%Y") ) )
+    parser.add_argument( "--batch-size", "-b", type = int, help = "Set batch parse size",
+                        default = str( BATCH_SIZE ) )
+    parser.add_argument( "--database", help = "Database/Namespace", default = "clinvar",
+                        default = DATABASE )
+    parser.add_argument( "--port", "-port", type = int, 
+                        help = "DBMS port, defualt 3306", default = str( PORT ) )
+    parser.add_argument("--user", "-u", help = "DBMS user, defualt depends on DBMS type",
+                        default = USER )
+     parser.add_argument("--password", "-p", help = "DBMS password, defualt depends on DBMS type",
+                        default = PASSWORD )
+    parser.add_argument("--submitters-table", "-su", help = "Submitters name - ID relations",
+                        default = TABLE_SUB )
+    parser.add_argument("--password", "-p", help = "DBMS password, defualt depends on DBMS type",
+                        default = PASSWORD )
     # Parse arguments
     args = parser.parse_args( )
     # Init logging
