@@ -2,8 +2,8 @@ CSV_FILE        = "/data/store/szubarev/Downloads/variant_summary.txt.gz"
 XML_FILE        = "/data/store/szubarev/Downloads/ClinVarFullRelease_00-latest.xml.gz"
 
 PORT            = 3306
-USER            = "hgmd"
-PASSWORD        = "hgmd"
+USER            = "test"
+PASSWORD        = "test"
 DATABASE        = "clinvar"
 TABLE_SUB       = "CV_Submitters_T"
 TABLE_SIG       = "ClinVar2Sub_Sig_T"
