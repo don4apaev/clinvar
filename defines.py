@@ -6,7 +6,7 @@ USER            = "hgmd"
 PASSWORD        = "hgmd"
 DATABASE        = "clinvar"
 TABLE_SUB       = "CV_Submitters_T"
-TABLE_SET       = "ClinVar2Sub_Sig_T"
+TABLE_SIG       = "ClinVar2Sub_Sig_T"
 TABLE_VAR       = "variant_summary_T"
 
 COLUMN_SUB      = ( "SubmitterID",
@@ -15,13 +15,13 @@ COLUMN_SUB      = ( "SubmitterID",
 TYPE_SUB        = ( 'INT',
                     'text'
                     )
-COLUMN_SET      = ( "SubmitterID",
+COLUMN_SIG      = ( "SubmitterID",
                     "RCVaccession",
                     'ClinicalSignificance'
                     #"Assembly",
                     #"VariationID",
                     )
-TYPE_SET        = ( 'INT',
+TYPE_SIG        = ( 'INT',
                     'varchar(12)',
                     'text'
                     #'varchar(4)',
@@ -68,7 +68,7 @@ TYPE_VAR        = ( 'int(11) DEFAULT NULL',
                     'text',
                     'int(11) DEFAULT NULL',
                     'text',
-                    'int(11) DEFAULT NULL,',
+                    'int(11) DEFAULT NULL',
                     'text',
                     'text',
                     'text',
@@ -93,8 +93,8 @@ TYPE_VAR        = ( 'int(11) DEFAULT NULL',
                     )
 # name, columns, unique, btree
 INDEX_SUB       = ( ( "Index0", ( "SubmitterID", ), True, False ), )
-INDEX_SET       = ( ( "Index0", ("RCVaccession", "SubmitterID" ), True, False ),
-                    ( "Index1", ( "SubmitterID", "RCVaccession") False, False ) )
+INDEX_SIG       = ( ( "Index0", ("RCVaccession", "SubmitterID" ), True, False ),
+                    ( "Index1", ( "SubmitterID", "RCVaccession"), False, False ) )
 INDEX_VAR       = ( ( 'index1', ( '#AlleleID', ), False, True ), 
                     ( 'c_idx', ( 'Chromosome', ), False, True ), 
                     ( 'p_idx', ('Start', 'Stop'), False, True ),
